@@ -1,4 +1,4 @@
-package org.netty.demo.unit;
+package org.netty.demo.unit.test1;
 
 
 import io.netty.buffer.ByteBuf;
@@ -12,10 +12,9 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.junit.jupiter.api.Test;
 import org.netty.demo.echo.ClientLoginHandler;
-import org.netty.demo.echo.EchoClientHandler;
 import org.netty.demo.echo.ServerLoginHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.netty.demo.unit.codecs.ByteToIntegerDecoder;
+import org.netty.demo.unit.codecs.IntegerToByteEncoder;
 
 import java.nio.charset.Charset;
 
@@ -33,12 +32,11 @@ public class InboundTest {
     }
 
 
-
-
-
-
+    /**
+     * 测试登录
+     */
     @Test
-    public  void testLogin(){
+    public void testLogin() {
         // 1、创建 EmbeddedChannel，并加入要测试ChannelHandler
         EmbeddedChannel embeddedChannel = new EmbeddedChannel(
                 new ClientLoginHandler(),
@@ -47,47 +45,48 @@ public class InboundTest {
         //2、写入入站数据，验证入站逻辑
         ByteBuf buf = Unpooled.copiedBuffer("Test EchoHandler input", Charset.forName("utf-8"));
         embeddedChannel.writeInbound(buf);
-        if (buf.refCnt() != 0){
+        if (buf.refCnt() != 0) {
             buf.release();
         }
         //3、写入出站数据，验证出站逻辑
         ByteBuf buf1 = Unpooled.copiedBuffer("Test EchoHandler output", Charset.forName("utf-8"));
         embeddedChannel.writeOutbound(buf1);
-        if (buf1.refCnt() != 0){
+        if (buf1.refCnt() != 0) {
             buf1.release();
         }
     }
 
 
-    public  static void echoClientHandlerTest(){
+    public static void echoClientHandlerTest() {
 
         // 1、创建 EmbeddedChannel，并加入要测试ChannelHandler
         EmbeddedChannel embeddedChannel = new EmbeddedChannel(
-                new StringEncoder(),
-                new StringDecoder(),
-                new InboundHandler1(),
-                new InboundHandler2()
+//                new StringEncoder(),
+//                new StringDecoder(),
+                new IntegerToByteEncoder(),
+                new ByteToIntegerDecoder()
+//                new InboundHandler1(),
+//                new InboundHandler2()
                 //new OutboundHandler1(),
                 //new OutboundHandler2()
         );
         //2、写入入站数据，验证入站逻辑
-        ByteBuf buf = Unpooled.copiedBuffer("Test EchoHandler input", Charset.forName("utf-8"));
+        ByteBuf buf = Unpooled.copiedBuffer("4396", Charset.forName("utf-8"));
         embeddedChannel.writeInbound(buf);
-        if (buf.refCnt() != 0){
+        if (buf.refCnt() != 0) {
             buf.release();
         }
-       /* //3、写入出站数据，验证出站逻辑
-        ByteBuf buf1 = Unpooled.copiedBuffer("Test EchoHandler output", Charset.forName("utf-8"));
+        //3、写入出站数据，验证出站逻辑
+        ByteBuf buf1 = Unpooled.copiedBuffer("4399", Charset.forName("utf-8"));
         embeddedChannel.writeOutbound(buf1);
-        if (buf1.refCnt() != 0){
+        if (buf1.refCnt() != 0) {
             buf1.release();
-        }*/
+        }
     }
-
 
 }
 
- class InboundHandler1 extends ChannelInboundHandlerAdapter {
+class InboundHandler1 extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -98,7 +97,7 @@ public class InboundTest {
     }
 }
 
- class InboundHandler2 extends ChannelInboundHandlerAdapter {
+class InboundHandler2 extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("inbound2>>>>>>>>>");
@@ -109,7 +108,8 @@ public class InboundTest {
 
 
 }
- class OutboundHandler1 extends ChannelOutboundHandlerAdapter {
+
+class OutboundHandler1 extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         System.out.println("outbound1>>>>>>>>>");
@@ -118,7 +118,7 @@ public class InboundTest {
     }
 }
 
- class OutboundHandler2 extends ChannelOutboundHandlerAdapter {
+class OutboundHandler2 extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         System.out.println("outbound2>>>>>>>>>");
