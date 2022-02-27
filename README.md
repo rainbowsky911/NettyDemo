@@ -6,6 +6,7 @@
 [Netty核心系列](https://www.cnblogs.com/jmcui/p/9154842.html)
 
 [Netty之实现自定义简单的编解码器](https://blog.csdn.net/zbw18297786698/article/details/53645313)
+[Netty编解码器](https://www.cnblogs.com/qdhxhz/p/10245936.html)
 
 
 `系统教程`
