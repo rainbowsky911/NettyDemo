@@ -2,6 +2,7 @@ package org.netty.demo.echo;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author: zdw
  * @date: 2022/2/15 12:47
  */
+@ChannelHandler.Sharable
 public class ServerLoginHandler extends ChannelInboundHandlerAdapter {
     //1.读取客户端发送过来的数据
     @Override
