@@ -23,6 +23,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.netty.demo.echo.ClientLoginHandler;
 
 import java.net.InetSocketAddress;
 import java.util.Scanner;
@@ -49,6 +50,7 @@ public final class EchoClient {
                             p.addLast(new LoggingHandler(LogLevel.DEBUG));
                             ch.pipeline().addLast(new StringEncoder()); //bytebuf转为字符串
                             ch.pipeline().addLast(new StringDecoder()); //bytebuf转为字符串
+                            ch.pipeline().addLast(new ClientLoginHandler());
                             ch.pipeline().addLast(new EchoClientHandler()); //bytebuf转为字符串
 
                         }

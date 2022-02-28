@@ -12,6 +12,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import org.netty.demo.echo.ServerLoginHandler;
 
 /**
  * Echoes back any received data from a client.
@@ -42,6 +43,7 @@ public final class EchoServer {
                      ChannelPipeline p = ch.pipeline();
                      p.addLast(new LoggingHandler(LogLevel.DEBUG));
                      p.addLast(new StringEncoder()); //bytebuf转为字符串
+                     p.addLast(new ServerLoginHandler());
                      p.addLast(new StringDecoder()); //bytebuf转为字符串
                      p.addLast(serverHandler);
                  }
