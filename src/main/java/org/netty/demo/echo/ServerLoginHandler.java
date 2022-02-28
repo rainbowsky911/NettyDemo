@@ -20,30 +20,38 @@ public class ServerLoginHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         //1.转换ByteBuf
-        ByteBuf buffer=(ByteBuf)msg;
+        ByteBuf buffer = (ByteBuf) msg;
         //2.定义一个byte数组，长度是ByteBuf的可读字节数
-        byte[] bytes=new byte[buffer.readableBytes()];
+        byte[] bytes = new byte[buffer.readableBytes()];
         //3.往自定义的byte[]读取数据
         buffer.readBytes(bytes);
 
         //4.对象流反序列化
-        ByteArrayInputStream is=new ByteArrayInputStream(bytes);
-        ObjectInputStream iss=new ObjectInputStream(is);
-        Map<String,String> map=(Map<String,String>)iss.readObject();
+        ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+        ObjectInputStream iss = new ObjectInputStream(is);
+        Map<String, String> map = (Map<String, String>) iss.readObject();
 
         //5.关闭流
         is.close();
         iss.close();
 
         //6.认证账号、密码，并且响应
-        String username=map.get("username");
-        String password=map.get("password");
-        if(username.equals("admin")&&password.equals("123456")){
+        String username = map.get("username");
+        String password = map.get("password");
+        if (username.equals("admin") && password.equals("123456")) {
             ctx.channel().writeAndFlush(Unpooled.copiedBuffer("success".getBytes()));
-        }else{
+
+            //移除该Handler,这样下次请求就不会执行该Handler了
+            ctx.pipeline().remove(this);
+        } else {
             ctx.channel().writeAndFlush(Unpooled.copiedBuffer("error".getBytes()));
             ctx.channel().closeFuture();
         }
     }
 
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("LoginHandler被移除");
+    }
 }
