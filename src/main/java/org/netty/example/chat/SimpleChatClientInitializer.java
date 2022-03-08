@@ -1,5 +1,6 @@
 package org.netty.example.chat;
 
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -7,6 +8,7 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.AttributeKey;
 
 /**
  * @Title: SimpleChatClientInitializer
@@ -24,5 +26,10 @@ public class SimpleChatClientInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast("decoder", new StringDecoder());
         pipeline.addLast("encoder", new StringEncoder());
         pipeline.addLast("handler", new SimpleChatClientHandler());
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+
     }
 }

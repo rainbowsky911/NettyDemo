@@ -2,6 +2,7 @@ package org.netty.example.chat;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.AttributeKey;
 
 /**
  * @Title: SimpleChatClientHandler
@@ -19,5 +20,12 @@ public class SimpleChatClientHandler extends SimpleChannelInboundHandler<String>
     protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
         System.out.println(msg);
 
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        AttributeKey<Object> key = AttributeKey.valueOf("token");
+        String value = (String) ctx.channel().attr(key).get();
+        System.out.println(value);
     }
 }
