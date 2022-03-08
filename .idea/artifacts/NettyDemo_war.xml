@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="NettyDemo:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>NettyDemo</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="NettyDemo-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="NettyDemo:war exploded" />
+    </root>
+  </artifact>
+</component>
