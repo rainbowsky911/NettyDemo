@@ -8,6 +8,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 
 import java.nio.charset.Charset;
@@ -29,14 +31,18 @@ public class Server {
                     .option(ChannelOption.SO_BACKLOG, 128)
                     //.childHandler(new MyServerChannelInitializer())
                     .childHandler(new ChannelInitializer<SocketChannel>() {
-
                         //断线重连
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // 服务端心跳检测
                             ChannelPipeline pipeline = ch.pipeline();
-                            //5秒钟之内没有 读事件 则断开连接
+
                             pipeline.addLast(new ReadTimeoutHandler(5, TimeUnit.SECONDS));
+
+
+                            pipeline.addLast(new LoggingHandler(LogLevel.DEBUG));
+
+                            //5秒钟之内没有 读事件 则断开连接
 
                             //字符串解码器
                             pipeline.addLast(new StringDecoder(Charset.forName("GBK")));

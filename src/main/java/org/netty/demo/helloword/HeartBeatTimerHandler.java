@@ -27,7 +27,7 @@ public class HeartBeatTimerHandler extends ChannelInboundHandlerAdapter {
             if (ctx.channel().isActive()) {
                 ctx.writeAndFlush("I'm alive");
             }
-        }, 3, TimeUnit.SECONDS);
+        }, 5, TimeUnit.SECONDS);
     }
 
 }

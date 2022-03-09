@@ -35,7 +35,7 @@ public class MyServerChannelInitializer extends ChannelInitializer<SocketChannel
         //5秒钟没有读事件，则断开连接
         ch.pipeline().addLast(new ReadTimeoutHandler(3, TimeUnit.SECONDS));
         //5秒钟没有写事件，则断开连接
-        ch.pipeline().addLast(new WriteTimeoutHandler(3, TimeUnit.SECONDS));
+       // ch.pipeline().addLast(new WriteTimeoutHandler(3, TimeUnit.SECONDS));
 
 
         //2.自定义解码器

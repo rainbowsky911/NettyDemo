@@ -10,8 +10,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 import java.nio.charset.Charset;
+import java.util.concurrent.TimeUnit;
 
 public class Client {
     public static void main(String[] args) {
@@ -29,11 +32,16 @@ public class Client {
             b.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
+
+                    ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+
                     ch.pipeline().addLast(new StringDecoder(Charset.forName("GBK")));
                     // 解码转String，注意调整自己的编码格式GBK、UTF-8
                     ch.pipeline().addLast(new StringEncoder(Charset.forName("GBK")));
-                    //3.业务处理Handler
-                    // ch.pipeline().addLast(new HeartBeatTimerHandler());
+                    //定时发送空包
+                    ch.pipeline().addLast(new HeartBeatTimerHandler());
+
+                    //断线重连Handler
                     ch.pipeline().addLast(new ClientTestHandler(b));
                 }
 
@@ -41,10 +49,12 @@ public class Client {
             ChannelFuture f = b.connect(inetHost, inetPort).sync();
             System.out.println("itstack-demo-netty client start done. {关注公众号：bugstack虫洞栈，获取源码}");
 
+
+            //实例：延迟 1 秒钟，每个 15 秒钟往服务端发送一次 hello world。
             //心跳检测http://www.imooc.com/wiki/nettylesson/netty25.html
-          /*  f.channel().eventLoop().scheduleWithFixedDelay(() -> {
-                f.channel().writeAndFlush("hello world!");
-            }, 1, 1, TimeUnit.SECONDS);*/
+//            f.channel().eventLoop().scheduleWithFixedDelay(() -> {
+//                f.channel().writeAndFlush("hello world!");
+//            }, 1, 1, TimeUnit.SECONDS);
 
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
